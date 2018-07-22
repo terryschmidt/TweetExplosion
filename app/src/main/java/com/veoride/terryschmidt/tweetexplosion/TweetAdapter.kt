@@ -25,11 +25,13 @@ class TweetAdapter(private var tweets: MutableList<Tweet>?) : RecyclerView.Adapt
         holder.tweetText.text = tweet?.text?.toString()
     }
 
+    // swap in new Tweet list
     fun swap(newTweets: MutableList<Tweet>?) {
         tweets = newTweets
         notifyDataSetChanged()
     }
 
+    // add 5 more new tweets to current tweet list
     fun addNewTweets(newTweets: MutableList<Tweet>?) {
         if (newTweets != null) {
             for (tweet in newTweets) {
@@ -41,6 +43,7 @@ class TweetAdapter(private var tweets: MutableList<Tweet>?) : RecyclerView.Adapt
         notifyDataSetChanged()
     }
 
+    // function to get tweet list size
     override fun getItemCount(): Int {
         return tweets?.size ?: 0
     }

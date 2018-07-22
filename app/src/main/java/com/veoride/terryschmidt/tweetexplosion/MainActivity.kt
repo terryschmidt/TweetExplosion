@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         setLoginButtonCallback()
     }
 
+    // function for left-swipe removal of tweets in recycler
     private fun createItemTouchHelper() {
         val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(tweetRecycler)
     }
 
+    // function for setting up twitter login button
     private fun setLoginButtonCallback() {
         twitterLoginButton.callback = object : Callback<TwitterSession>() {
             override fun success(result: Result<TwitterSession>) {
@@ -87,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // function for loading twitter API
     private fun loadTwitterAPI(userID: Long) {
         TweetExplosionApiClient(twitterSession).customService.show(userID).enqueue(object : Callback<User>() {
             override fun success(result: Result<User>) {
@@ -101,11 +104,13 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    // function to receive the result from twitter login activities
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         twitterLoginButton.onActivityResult(requestCode, resultCode, data)
     }
 
+    // function called when user presses search button
     fun searchButtonPressed(view: View) {
         removedTweetCount = 0
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -113,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         fetchTweets(15)
     }
 
+    // function to fetch Tweets from Twitter API via retrofit
     private fun fetchTweets(numberOfTweetsToFetch: Int) {
         val searchText = "#" + searchEditText.text.toString()
         TweetExplosionApiClient(twitterSession).searchService.tweets(
@@ -128,7 +134,6 @@ class MainActivity : AppCompatActivity() {
                 true)
                 .enqueue(object: Callback<Search>() {
                     override fun success(result: Result<Search>?) {
-                        Log.d(TAG, "success on thread: " + Thread.currentThread().name)
                         if (numberOfTweetsToFetch == 15) {
                             tweets = result?.data?.tweets?.toMutableList()
                             tweetRecycler.visibility = View.VISIBLE
